@@ -21,3 +21,6 @@ Para rodar um cliente localhost (passar a porta como primeiro argumento e o nome
 ```sh
 ./gradlew client:run --args="8080 Pedro" --console=plain
 ```
+
+Para o cliente iniciar o jogo apos conectado, basta digitar INICIAR_JOGO.
+Para o cliente sair do jogo antes de comecar, basta digitar SAIR_JOGO.
