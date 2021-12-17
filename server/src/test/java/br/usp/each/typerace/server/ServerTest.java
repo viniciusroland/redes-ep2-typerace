@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import br.usp.each.typerace.server.models.PlacarParcial;
+import br.usp.each.typerace.server.utils.ByteBufferStringConverter;
+
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,12 +32,15 @@ class ServerTest {
     @BeforeEach
     public void setup() {
         connections = new HashMap<>();
-        subject = new Server(8080, this.connections);
+        subject = new Server(8080, connections);
+        mockConnection = mock(WebSocket.class);
     }
 
     @Test
     public void deveArmazenarConexoesAbertas() {
         ClientHandshake mockHandshake = mock(ClientHandshake.class);
+        
+        when(mockHandshake.getFieldValue(anyString())).thenReturn("nome-cliente");
 
         subject.onOpen(mockConnection, mockHandshake);
 
@@ -62,4 +69,42 @@ class ServerTest {
         }
     }
 
+    @Test
+    public void deveReceberComandoParaIniciarJogo() {
+      assertEquals(false, subject.getStatusJogo());
+      
+      ByteBuffer sideEffect = ByteBufferStringConverter.stringToByteBuffer("INICIAR_JOGO");
+      subject.onMessage(mockConnection, sideEffect);
+
+      assertEquals(true, subject.getStatusJogo());
+    }
+   
+    @Test
+    public void deveMarcarPlacarParcial() {
+      String PALAVRA_CORRETA = "alaude";
+      String PALAVRA_ERRADA = "erro";
+
+      assertEquals(false, subject.getStatusJogo());
+      
+      ByteBuffer sideEffect = ByteBufferStringConverter.stringToByteBuffer("INICIAR_JOGO");
+      subject.onMessage(mockConnection, sideEffect);
+
+      assertEquals(true, subject.getStatusJogo());
+     
+      connections.put("cliente1", mockConnection);
+      subject.placarGeral.put("cliente1", new PlacarParcial());
+      subject.onMessage(mockConnection, PALAVRA_CORRETA);
+
+      assertEquals(1, subject.placarGeral.get("cliente1").getAcertos());
+      assertEquals(0, subject.placarGeral.get("cliente1").getErros());
+     
+      subject.onMessage(mockConnection, PALAVRA_ERRADA);
+      assertEquals(1, subject.placarGeral.get("cliente1").getAcertos());
+      assertEquals(1, subject.placarGeral.get("cliente1").getErros());
+    }
+   
+    @Test
+    public void mostraResultado() {
+      
+    }
 }

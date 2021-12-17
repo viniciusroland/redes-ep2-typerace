@@ -12,12 +12,12 @@ Repositório para o EP2 de Redes de Computadores, EACH-USP - 2021/2
 * Gradle (incluso no repositório, não é necessário instalá-lo)
 
 ### Rodando
-Para rodar o servidor
+Para rodar o servidor localhost (passar a porta como unico argumento)
 ```sh
-./gradlew server:run
+./gradlew server:run --args="8080" --console-plain
 ```
 
-Para rodar um cliente
+Para rodar um cliente localhost (passar a porta como primeiro argumento e o nome do cliente como segundo argumento)
 ```sh
-./gradlew client:run
+./gradlew client:run --args="8080 Pedro" --console-plain
 ```

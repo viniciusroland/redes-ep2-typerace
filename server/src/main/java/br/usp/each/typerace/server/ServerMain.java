@@ -14,15 +14,15 @@ public class ServerMain {
 
     public void init() {
         System.out.println("Iniciando servidor...");
-        // TODO: Implementar
+        server.start();
     }
 
-    public static void main(String[] args) {
-        WebSocketServer server = new Server(8080, new HashMap<>());
+  public static void main(String[] args) {
+    int porta = Integer.parseInt(args[0]);
 
-        ServerMain main = new ServerMain(server);
-
-        main.init();
-    }
+		WebSocketServer server = new Server(porta, new HashMap<>());
+    ServerMain main = new ServerMain(server);
+    main.init();
+	}
 
 }
