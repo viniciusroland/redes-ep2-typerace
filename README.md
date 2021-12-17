@@ -3,7 +3,7 @@ Repositório para o EP2 de Redes de Computadores, EACH-USP - 2021/2
 
 # Integrantes
 * Vinicius Roland Crisci - 10773381
-* Integrante 2 - 2222222
+* Rafael Bingre Malhado - 10296952
 * Integrante 3 - 3333333
 * Integrante 4 - 4444444
 
