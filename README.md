@@ -5,7 +5,7 @@ Repositório para o EP2 de Redes de Computadores, EACH-USP - 2021/2
 * Vinicius Roland Crisci - 10773381
 * Rafael Bingre Malhado - 10296952
 * Vinicius Mariano Bispo - 10875965
-* Integrante 4 - 4444444
+* William Hideyuki Ayukawa - 10346892
 
 ## Pré-requisitos
 * JDK 11 ou maior (testado com a JDK11 OpenJDK)
