@@ -29,7 +29,15 @@ Para o cliente iniciar o jogo apos conectado, basta digitar INICIAR_JOGO.
 Para o cliente sair do jogo antes de comecar, basta digitar SAIR_JOGO.
 
 #### Printscreens
+
+Conexao iniciada com clientes
 ![Conexao iniciada com clientes](https://i.postimg.cc/HsPZcm9H/conexao-iniciada.png)
+
+Contagem regressiva apos iniciar o jogo
 ![Contagem regressiva apos iniciar jogo](https://i.postimg.cc/kg0TsyHp/contagem-regressiva.png)
+
+Jogo rodando
 ![Jogo rodando](https://i.postimg.cc/nhjdqW3m/jogo-rodando.png)
+
+Placar final
 ![Placar final](https://i.postimg.cc/wBD0Gm8T/placar-final.png)
