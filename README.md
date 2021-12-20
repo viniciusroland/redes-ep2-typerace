@@ -28,6 +28,9 @@ Para o cliente iniciar o jogo após conectado basta digitar INICIAR_JOGO
 ### Sair do jogo
 Para o cliente sair do jogo antes de começar basta digitar SAIR_JOGO
 
+### Digitando as palavras
+Após as palavras aparecerem na tela, como 'alaude', 'pandemia', 'cicatrizacao', você já pode começar a digitar. Para enviar uma palavra ao servidor, basta digita-la e apertar ENTER para enviar
+
 ### Printscreens
 
 Conexão iniciada com clientes
