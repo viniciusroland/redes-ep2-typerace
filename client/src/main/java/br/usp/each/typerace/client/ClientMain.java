@@ -14,6 +14,8 @@ public class ClientMain {
   }
 
   public void init(String idCliente) {
+    // adicionando o nome do cliente como um custom header do WebSocketClient
+    // com isso conseguimos linkar uma string customizada `a conexao do cliente
     System.out.println("Iniciando cliente: " + idCliente);
     this.client.addHeader("x-client-name", idCliente);
     this.client.connect();
@@ -24,6 +26,7 @@ public class ClientMain {
     String clienteNome = args[1];
 
     try {
+      // iniciando sempre em localhost para facilitar
       String localhost = "ws://localhost:";
       WebSocketClient client = new Client(new URI(localhost + porta));
 

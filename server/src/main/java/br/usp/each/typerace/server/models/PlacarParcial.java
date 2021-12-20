@@ -7,6 +7,8 @@ import java.util.Objects;
 import br.usp.each.typerace.server.db.Palavras;
 
 public class PlacarParcial implements Comparable<PlacarParcial> {
+  // placar parcial de cada cliente:
+  //    armazena os erros, acertos, e as palavras atuais que ainda faltam digitar
   private int acertos = 0;
   private int erros = 0;
   private List<String> palavrasDoCliente = new LinkedList<String>(Palavras.TRINTA_PALAVRAS);

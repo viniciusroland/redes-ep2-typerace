@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 public class ByteBufferStringConverter {
+  // conversor de byte buffer <-> string, 
+  // usado principalmente para publicar os comandos/eventos do servidor
   public static String byteBufferToString(ByteBuffer bb) {
     try {
       return new String(bb.array(), "UTF-8");

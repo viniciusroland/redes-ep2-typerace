@@ -26,14 +26,17 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class Server extends WebSocketServer {
+  // principais eventos (poderia estar num submodule compartilhado com o client)
   private String EVENTO_JOGO_INICIADO = "JOGO_INICIADO";
   private String EVENTO_JOGO_TERMINADO = "JOGO_TERMINADO";
 
+  // principais comandos (poderia estar num submodule compartilhado com o client)
   private String COMANDO_INICIAR_JOGO = "INICIAR_JOGO";
   private String COMANDO_LIMPAR_CONSOLE = "LIMPAR_CONSOLE";
 
   private boolean JOGO_ESTA_UP = false;
 
+  // numero de acertos para vencer
   private int NUMERO_ACERTOS_VENCEDOR = 25;
 
   private String TRINTA_PALAVRAS = String.join("  ", Palavras.TRINTA_PALAVRAS);
@@ -52,6 +55,7 @@ public class Server extends WebSocketServer {
     return JOGO_ESTA_UP;
   } 
 
+  // metodo para notificar todos os outros clientes de uma nova conexao
   private void notificaTodosExceto(String clienteNovo) {
     this.connections.forEach((cliente, conn) -> {
       if (!Objects.equals(cliente, clienteNovo)) {
@@ -61,11 +65,13 @@ public class Server extends WebSocketServer {
     });
   }
 
+  // metodo para enviar uma string para qualquer cliente a partir do nome
   public void enviaMensagemParaCliente(String cliente, String mensagem) {
     WebSocket conn = getClienteConnAPartirDoNome(cliente);
     conn.send(mensagem);
   }
 
+  // publica evento (no formato de byte buffer) para qualquer cliente a partir do nome
   private void publicaEventoParaCliente(String cliente, String sideEffect) {
     WebSocket conn = getClienteConnAPartirDoNome(cliente);
     ByteBuffer evento = ByteBufferStringConverter.stringToByteBuffer(sideEffect);
@@ -77,6 +83,7 @@ public class Server extends WebSocketServer {
     placarGeral.put(clienteNome, new PlacarParcial());
   }
 
+  // retorna o nome do cliente a partir do sua conexao
   private String getClienteNomeAPartirDaConn(WebSocket conn) {
     for (Entry<String, WebSocket> tupla : connections.entrySet()) {
       if (Objects.equals(tupla.getValue(), conn)) {
@@ -86,6 +93,7 @@ public class Server extends WebSocketServer {
     return null;
   }
 
+  // retorna a conexao do cliente a partir do seu nome
   private WebSocket getClienteConnAPartirDoNome(String cliente) {
     for (Entry<String, WebSocket> tupla : connections.entrySet()) {
       if (Objects.equals(tupla.getKey(), cliente)) {
@@ -95,10 +103,14 @@ public class Server extends WebSocketServer {
     return null;
   }
 
+  // metodo executado quando recebemos o comando de INICIAR_JOGO de algum cliente
   private void iniciaJogo() {
     mostraClientesConectados();
     mostraQtdAcertosParaVencer(); 
+
     ContagemRegressivaThread contagemRegressiva = new ContagemRegressivaThread();
+
+    // inicia uma contagem regressiva
     contagemRegressiva.start();
 
     synchronized (contagemRegressiva) {
@@ -108,9 +120,14 @@ public class Server extends WebSocketServer {
         e.printStackTrace();
       }
 
+      // comeca o jogo depois da contagem regressiva de ~5 segundos
       JOGO_ESTA_UP = true;
       cronometro.start();
+
+      // indica para todos os clientes que o jogo foi comecado
       publicaEventoParaTodosClientes(EVENTO_JOGO_INICIADO);
+
+      // envia 30 palavras para todos os clientes
       enviaMensagemParaTodosClientes(TRINTA_PALAVRAS);
     }
   }
@@ -130,6 +147,7 @@ public class Server extends WebSocketServer {
     enviaMensagemParaTodosClientes(clientesConectadosMsg);
   }
 
+  // envia mensagem (string) para todos os clientes
   private void enviaMensagemParaTodosClientes(String mensagem) {
     List<WebSocket> clientes = this.connections
         .entrySet()
@@ -140,6 +158,7 @@ public class Server extends WebSocketServer {
     broadcast(mensagem, clientes);
   }
 
+  // publica evento/comando (bytebuffer) para todos os clientes
   private void publicaEventoParaTodosClientes(String sideEffect) {
     List<WebSocket> clientes = this.connections
         .entrySet()
@@ -151,6 +170,7 @@ public class Server extends WebSocketServer {
     broadcast(evento, clientes);
   }
 
+  // retorna o podio ordenado, baseado no placar parcial de cada cliente
   private LinkedList<Entry<String, PlacarParcial>> getPodioLista() {
     LinkedList<Entry<String, PlacarParcial>> podio = new LinkedList<Entry<String, PlacarParcial>>(placarGeral.entrySet());
 
@@ -164,6 +184,7 @@ public class Server extends WebSocketServer {
     return podio;
   }
 
+  // mostra placar final para todos os clientes
   private void apresentaPlacarGeralParaTodosClientes() {
     LinkedList<Entry<String, PlacarParcial>> podio = getPodioLista();
 
@@ -189,6 +210,7 @@ public class Server extends WebSocketServer {
     enviaMensagemParaTodosClientes(placarFinal.toString());
   }
 
+  // metodo utilizado para atualizar a tela do cliente quando ele acerta
   private void disponibilizaPalavrasEPlacarParcialParaCliente(String cliente) {
     String placarParcialStr = getPlacarParcialCliente(cliente);
 
@@ -207,6 +229,7 @@ public class Server extends WebSocketServer {
     return "Acertos: " + acertos + ", Erros: " + erros + " \n";
   }
 
+  // metodo para encerrar o jogo, parar o cronometro, e mostrar placar geral para todos os clientes
   private void encerraJogo(boolean comSucesso) {
     if (comSucesso) {
       cronometro.stop();
@@ -226,6 +249,7 @@ public class Server extends WebSocketServer {
   }
 
   public class ContagemRegressivaThread extends Thread {
+    // contagem regressiva de ~5 segundos
     int UM_SEGUNDO_E_MEIO = 1500;
 
     @Override
@@ -234,7 +258,7 @@ public class Server extends WebSocketServer {
         for (int i = 5; i > 0; i--) {
           try {
             enviaMensagemParaTodosClientes("O jogo vai comecar em: " + Integer.toString(i));
-            Thread.sleep(1500);
+            Thread.sleep(UM_SEGUNDO_E_MEIO);
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
@@ -248,10 +272,16 @@ public class Server extends WebSocketServer {
 
   @Override
   public void onOpen(WebSocket conn, ClientHandshake handshake) {
+    // pegando nome do cliente a partir do header customizado "x-client-name"
     String novoCliente = handshake.getFieldValue("x-client-name");
+
     salvaConexao(novoCliente, conn);
     System.out.println("Novo cliente conectado com sucesso: " + novoCliente + ". Conexao: " + conn.getResourceDescriptor());
+
+    // enviando mensagem para o cliente com conexao bem sucedida
     enviaMensagemParaCliente(novoCliente, "Bem vindo ao servidor, " + novoCliente);
+
+    // notificando todos os outros clientes desse novo cliente
     notificaTodosExceto(novoCliente);
   }
 
@@ -262,14 +292,17 @@ public class Server extends WebSocketServer {
     System.out.println("Conexao " + conn.getResourceDescriptor() + " fechada do " + cliente
         + " com codigo " + code + ". Info adicional: " + reason);
 
+    // limpando conexao e placar do cliente desconectado
     connections.remove(cliente);
     placarGeral.remove(cliente);
 
+    // encerrando jogo se as conexoes estiverem vazias
     if (connections.keySet().isEmpty()) {
       encerraJogo(false);
     }
   }
 
+  // onMessage de string recebe as palavras digitadas do cliente e tenta pontuar
   @Override
   public void onMessage(WebSocket conn, String palavra) {
     String cliente = getClienteNomeAPartirDaConn(conn);
@@ -294,6 +327,8 @@ public class Server extends WebSocketServer {
     }
   }
 
+  // onMessage de byte buffer recebe os eventos/comandos do cliente,
+  // visando produzir algum sideffect, como iniciar o jogo
   @Override
   public void onMessage(WebSocket conn, ByteBuffer sideEffect) {
     String cliente = getClienteNomeAPartirDaConn(conn);

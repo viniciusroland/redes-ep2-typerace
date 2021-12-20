@@ -1,6 +1,8 @@
 package br.usp.each.typerace.server.utils;
 
 public class Stopwatch {
+  // cronometro para medir o tempo de partida
+ 
   private long startTime = 0;
   private long stopTime = 0;
   private boolean running = false;

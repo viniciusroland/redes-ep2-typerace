@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Palavras {
+  // lista de palavras aleatorias retirada de um .txt da internet
   private static List<String> PALAVRAS = Arrays.asList(
     "hidramatico", "alaude", "pandemia", "cicatrizacao", "sacudida", "tabuada",
  "exoneravel", "monopolista", "artemisia", "atingido", "renegar", "agnostico",

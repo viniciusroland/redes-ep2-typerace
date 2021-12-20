@@ -12,9 +12,11 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class Client extends WebSocketClient {
+  // principais eventos (poderia estar num submodule compartilhado com o backend)
   private String EVENTO_JOGO_INICIADO = "JOGO_INICIADO";
   private String EVENTO_JOGO_TERMINADO = "JOGO_TERMINADO";
 
+  // principais comandos (poderia estar num submodule compartilhado com o backend)
   private String COMANDO_SAIR_JOGO = "SAIR_JOGO";
   private String COMANDO_LIMPAR_CONSOLE = "LIMPAR_CONSOLE";
   private String COMANDO_INICIAR_JOGO = "INICIAR_JOGO";
@@ -33,6 +35,8 @@ public class Client extends WebSocketClient {
     close();
   }
 
+  // o leitar eh basicamente uma thread apartada que roda indefinidamente um Scanner.nextLine() 
+  // e envia pro servidor a mensagem ou o comando lido
   public void iniciaLeitor() {
     new Thread() {
 
@@ -70,6 +74,7 @@ public class Client extends WebSocketClient {
     send(mensagem);
   }
 
+  // lida com evento de jogo iniciado enviado pelo servidor 
   private void lidaComPossivelEventoDeJogoIniciado(String mensagem) {
     if (Objects.equals(mensagem, EVENTO_JOGO_INICIADO)) {
       ESTA_EM_GAME = true;
@@ -77,6 +82,7 @@ public class Client extends WebSocketClient {
     }
   }
 
+  // lida com evento de jogo terminado enviado pelo servidor 
   private void lidaComPossivelEventoDeJogoTerminado(String mensagem) {
     if (Objects.equals(mensagem, EVENTO_JOGO_TERMINADO)) {
       ESTA_EM_GAME = false;
@@ -84,12 +90,14 @@ public class Client extends WebSocketClient {
     }
   }
 
+  // lida com comando de limpar o console enviado pelo servidor
   private void lidaComPossivelComandoDeLimparConsole(String mensagem) {
     if (Objects.equals(mensagem, COMANDO_LIMPAR_CONSOLE)) {
       limpaConsole();
     }
   }
   
+  // limpa console para dar espaco para as palavras atualizadas
   public void limpaConsole() {
     System.out.print("\033[H\033[2J");
     System.out.flush();
@@ -114,6 +122,7 @@ public class Client extends WebSocketClient {
     System.out.println(mensagem);
   }
  
+  // lida com os eventos/comandos enviados pelo servidor no formato de byte buffer 
   @Override
   public void onMessage(ByteBuffer sideEffect) {
     String s = ByteBufferStringConverter.byteBufferToString(sideEffect);
