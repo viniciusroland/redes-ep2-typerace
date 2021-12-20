@@ -5,7 +5,6 @@ import org.java_websocket.server.WebSocketServer;
 import java.util.HashMap;
 
 public class ServerMain {
-
     private WebSocketServer server;
 
     public ServerMain(WebSocketServer server) {
