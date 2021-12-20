@@ -23,10 +23,10 @@ Para rodar um cliente localhost (passar a porta como primeiro argumento e o nome
 ```
 
 ### Iniciar jogo
-Para o cliente iniciar o jogo apos conectado, basta digitar INICIAR_JOGO.
+Para o cliente iniciar o jogo apos conectado basta digitar INICIAR_JOGO.
 
 ### Sair do jogo
-Para o cliente sair do jogo antes de comecar, basta digitar SAIR_JOGO.
+Para o cliente sair do jogo antes de comecar basta digitar SAIR_JOGO.
 
 #### Printscreens
 
