@@ -102,9 +102,4 @@ class ServerTest {
       assertEquals(1, subject.placarGeral.get("cliente1").getAcertos());
       assertEquals(1, subject.placarGeral.get("cliente1").getErros());
     }
-   
-    @Test
-    public void mostraResultado() {
-      
-    }
 }
